@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="ניצח / תיקו / הפסיד"
+        android:textSize="20dp"
+        android:fontFamily="@font/hebrew_font"
+        android:id="@+id/tvEndResult"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="הנקודות שלך: "
+        android:textSize="15dp"
+        android:fontFamily="@font/hebrew_font"
+        android:id="@+id/tvDialogMyPoints"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="נקודות היריב: "
+        android:textSize="15dp"
+        android:fontFamily="@font/hebrew_font"
+        android:id="@+id/tvDialogOpponentPoints"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="חזרה לעמוד הבית"
+        android:fontFamily="@font/hebrew_font"
+        android:id="@+id/btnDialogGoHome"/>
+</LinearLayout>

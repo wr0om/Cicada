@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "677918244101",
+    "firebase_url": "https://lambda-febb5-default-rtdb.firebaseio.com/",
+    "project_id": "lambda-febb5",
+    "storage_bucket": "lambda-febb5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677918244101:android:e98c6f39e442e4e00bcb6c",
+        "android_client_info": {
+          "package_name": "com.companyname.lambda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677918244101-5t3hi0vg33avgnhu0dn9mvqm59ik174s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW_4MfdNcyTHDyyoFspLuCyGQbYoCprzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677918244101-5t3hi0vg33avgnhu0dn9mvqm59ik174s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,8 @@
+.git/*
+.vs/*
+Lambda2/bin/*
+Lambda2/obj/*
+Lambda2/files/*
+*.apk
+*.obj
+*.html

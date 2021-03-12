@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="אני"
+        android:textAllCaps="false"
+        android:layout_marginRight="10dp"
+        android:id="@+id/btnMe"/>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/ivMePic"
+        android:src="@drawable/defaultpp"
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="נצחונות: "
+        android:textSize="14sp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/textColor"
+        android:id="@+id/tvWins"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="אחוז נצחון: "
+        android:textSize="14sp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/textColor"
+        android:id="@+id/tvWinPercentage"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="רשימת נושאים"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:textColor="@color/textColor"
+        android:layout_margin="20dp"/>
+    <Button
+       android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ידע כללי"
+        android:layout_gravity="center"
+        android:id="@+id/btnGenKnow"/>
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:textSize="15sp"
+      android:layout_gravity="center"
+      android:textColor="@color/textColor"
+      android:text="עוד נושאים בעתיד..."/>
+</LinearLayout>
