@@ -17,9 +17,11 @@ using System.IO;
 
 namespace Lambda2
 {
+
     /// <summary>
     /// Home screen, allows to go to MeActivity 
     /// </summary>
+    
     [Activity(Label = "מסך הבית", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class HomeActivity : AppCompatActivity, Android.Views.View.IOnClickListener, IOnCompleteListener, Firebase.Firestore.IEventListener
     {
@@ -80,9 +82,7 @@ namespace Lambda2
         public override bool OnOptionsItemSelected(Android.Views.IMenuItem item)
         {
             if (item.ItemId == Resource.Id.action_settings)
-            {
                 CreateSettingsDialog();
-            }
             return base.OnOptionsItemSelected(item);
         }
         /// <summary>
@@ -103,7 +103,7 @@ namespace Lambda2
             sp = new SPData(this);
             user = new User();
             game = new Game();
-            if(sp.GetStringData(Constants.EMAIL)!=null)
+            if (sp.GetStringData(Constants.EMAIL) != null)
                 user.Email = sp.GetStringData(Constants.EMAIL);
             if (sp.GetStringData(Constants.USERNAME) != null)
                 user.UserName = sp.GetStringData(Constants.USERNAME);
@@ -152,7 +152,6 @@ namespace Lambda2
                         sp.SetData(Constants.USERNAME, (string)ds.Get(Constants.USERNAME));
                         sp.SetData(Constants.EMAIL, (string)ds.Get(Constants.EMAIL));
                         sp.SetData(Constants.PASSWORD, (string)ds.Get(Constants.PASSWORD));
-
                         if(ds.Get(Constants.TIE_NUM) != null)
                             sp.SetData(Constants.TIE_NUM, (int)ds.Get(Constants.TIE_NUM));
                         if (ds.Get(Constants.WIN_NUM) != null)
@@ -168,7 +167,7 @@ namespace Lambda2
                     }
                 }
             }
-            if (task == taskFindGame && task.IsSuccessful)
+            else if (task == taskFindGame && task.IsSuccessful)
             {
                 QuerySnapshot qs = (QuerySnapshot)task.Result;
                 string gameNum = "";
@@ -285,20 +284,18 @@ namespace Lambda2
                 StartActivity(intent);
                 Finish();
             }
-            if (v == btnGenKnow)
+            else if (v == btnGenKnow)
             {
                 CreateStartGameDialog();
                 game.Subject = Constants.GENERAL_KNOWLEDGE;
             }
-            if (v == btnSearch)
+            else if (v == btnSearch)
             {
                 d.Dismiss();
                 taskFindGame = fd.GetCollection(Constants.GAMES_COL).AddOnCompleteListener(this);//search for game    
             }
-            if(v == cbMuteMusic)
-            {
+            else if(v == cbMuteMusic)
                 sp.SetData(Constants.IS_MUSIC_MUTED, cbMuteMusic.Checked);
-            }
         }
         /// <summary>
         /// Creates and show settings dialog - where we can mute the background music of the game

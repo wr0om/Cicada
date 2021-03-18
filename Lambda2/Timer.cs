@@ -21,10 +21,7 @@ namespace Lambda2
         public int c { get; set; }
         Handler handler;
         FirebaseData fd;
-        Task taskSetGameHM;
         public HashMap GameHM { get; set; }
-
-
         bool isHost, isRestingTime;
         GameActivity gameActivity;
         ThreadStart threadStart;

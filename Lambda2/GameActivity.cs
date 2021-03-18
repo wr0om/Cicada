@@ -22,6 +22,7 @@ namespace Lambda2
     /// <summary>
     /// The activity of the actual game, here is where we play the trivia game - Cicada
     /// </summary>
+    
     [Activity(Label = "", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class GameActivity : Activity, Android.Views.View.IOnClickListener, Firebase.Firestore.IEventListener, IOnCompleteListener
     {
@@ -89,7 +90,8 @@ namespace Lambda2
                     user.ProfilePicture_url = (string)ds.Get(Constants.PROFILE_PIC_URL);
                     ImageService.Instance.LoadUrl(user.ProfilePicture_url).Retry(3, 200).FadeAnimation(true).DownSample(130, 100).Into(ivMePic);
                 }
-            }if(task == taskPullOpponentPic)
+            }
+            else if(task == taskPullOpponentPic)
             {
                 if (task.IsSuccessful && ds.Get(Constants.PROFILE_PIC_URL) != null)//if we did pull an image, we put it in the imageview (we are supposed to at this point)
                 {
@@ -98,10 +100,10 @@ namespace Lambda2
                     ImageService.Instance.LoadUrl(opponent.ProfilePicture_url).Retry(3, 200).FadeAnimation(true).DownSample(130, 100).Into(ivOpponentPic);
                     InitGame();//we start the game only when we finish those tasks
                 }
-            }if (task.IsSuccessful && task == taskPresentQuestion)
-            {
+            }
+            else if (task.IsSuccessful && task == taskPresentQuestion)
                 PresentQuestion(rand);
-            }if(task.IsSuccessful && task == taskAnsweredQue)
+            else if(task.IsSuccessful && task == taskAnsweredQue)
             {
                 gameHashMap = SetHashMap(ds, gameHashMap);
                 if (isHost)
@@ -110,7 +112,8 @@ namespace Lambda2
                     gameHashMap.Put(Constants.PLAYER_ANSWER, int.Parse(tvMyAnswer.Text));
                 timer.GameHM = gameHashMap;
                 fd.AddDocumentToCollection(Constants.GAMES_COL, game.GameNum, gameHashMap);
-            }if(task.IsSuccessful && task == taskSavePlayerResult)
+            }
+            else if(task.IsSuccessful && task == taskSavePlayerResult)
             {
                 int currTieNum = ds.Get(Constants.TIE_NUM) != null ? (int)ds.Get(Constants.TIE_NUM) : 0;
                 int currWinNum = ds.Get(Constants.WIN_NUM) != null ? (int)ds.Get(Constants.WIN_NUM) : 0;
@@ -154,7 +157,6 @@ namespace Lambda2
                 tvMyAnswer.Text = 0.ToString();
                 tvOpponentAnswer.Text = 0.ToString();
                 tvAnswer.Text = "תשובה";
-
                 gameHashMap = SetHashMap(ds, gameHashMap);
                 int index = (int)ds.Get(Constants.CURRENT_Q_INDEX);
                 lastIndex = index;
@@ -167,11 +169,11 @@ namespace Lambda2
                 //check answers
                 CheckAnsAndUpdate(ds);
                 gameStatus = HasWon();//if host wins = 1, if player wins = 2, if tie = 0, if not won at all = -1
-                if (gameStatus != -1)//if the game is over, we show the ending dialog
+                tvAnswer.Text = questions[(int)ds.Get(Constants.CURRENT_Q_INDEX)].Ans.ToString();
+                if (gameStatus != Constants.NOT_WON)//if the game is over, we show the ending dialog
                 {
                     isGameOver = true;
                     ShowGameEndDialog(gameStatus);
-
                 }
                 else if(!isGameOver)//else, we keep the game going
                 {
@@ -183,8 +185,6 @@ namespace Lambda2
                         gameHashMap.Put(Constants.PLAYER_ANSWER, 0);
                         fd.AddDocumentToCollection(Constants.GAMES_COL, game.GameNum, gameHashMap);
                     }
-
-                    tvAnswer.Text = questions[(int)ds.Get(Constants.CURRENT_Q_INDEX)].Ans.ToString();
                     StartTimer(Constants.RESTING_TIME);//resting time after the answer is presented
                     //put the rest that is down there here after game is finished!
                 }
@@ -199,13 +199,11 @@ namespace Lambda2
                 tvMyAnswer.Text = 0.ToString();
                 tvOpponentAnswer.Text = 0.ToString();
                 tvAnswer.Text = "תשובה";
-
                 gameHashMap.Put(Constants.CURRENT_Q_INDEX, RandomNumber());
                 gameHashMap.Put(Constants.IS_NEW_QUESTION, false);
                 fd.AddDocumentToCollection(Constants.GAMES_COL, game.GameNum, gameHashMap);
                 fd.AddSnapShotListenerToDocument(Constants.GAMES_COL, game.GameNum, this);
                 PresentQuestion(rand);
-                
             }
         }
         /// <summary>
@@ -237,14 +235,14 @@ namespace Lambda2
 
             switch (result)//if tie = 0, if host wins = 1, if player wins = 2
             {
-                case 0:
+                case Constants.TIE:
                     hostPoints++;
                     playerPoints++;
                     break;
-                case 1:
+                case Constants.HOST_WINS:
                     hostPoints++;
                     break;
-                case 2:
+                case Constants.PLAYER_WINS:
                     playerPoints++;
                     break;
             }
@@ -255,7 +253,6 @@ namespace Lambda2
             fd.UpdateDocument(Constants.GAMES_COL, game.GameNum, Constants.HOST_POINTS, hostPoints);
             fd.UpdateDocument(Constants.GAMES_COL, game.GameNum, Constants.PLAYER_POINTS, playerPoints);
 
-            //fd.AddDocumentToCollection(Constants.GAMES_COL, game.GameNum, gameHashMap);//input current points
             //put host and player answers + points on both screens
             if (isHost)
             {
@@ -325,10 +322,10 @@ namespace Lambda2
         public int CheckAnswers(int hostNum, int playerNum, int currentIndex)
         {
             if (Math.Abs(hostNum - questions[currentIndex].Ans) > Math.Abs(playerNum - questions[currentIndex].Ans))
-                return 2;
+                return Constants.PLAYER_WINS;
             else if (Math.Abs(hostNum - questions[currentIndex].Ans) < Math.Abs(playerNum - questions[currentIndex].Ans))
-                return 1;
-            return 0;
+                return Constants.HOST_WINS;
+            return Constants.TIE;
         }
         /// <summary>
         /// Checks to see if someone won the game - reached Constants.POINTS_TO_WON
@@ -337,22 +334,18 @@ namespace Lambda2
         public int HasWon()
         {
             if (user.Points == Constants.POINTS_TO_WIN && opponent.Points == Constants.POINTS_TO_WIN)
-                return 0;
+                return Constants.TIE;
             else if (user.Points == Constants.POINTS_TO_WIN)
-            {
                 if (isHost)
-                    return 1;
+                    return Constants.HOST_WINS;
                 else
-                    return 2;
-            }
+                    return Constants.PLAYER_WINS;
             else if (opponent.Points == Constants.POINTS_TO_WIN)
-            {
                 if (isHost)
-                    return 2;
+                    return Constants.PLAYER_WINS;
                 else
-                    return 1;
-            }
-            return -1;
+                    return Constants.HOST_WINS;
+            return Constants.NOT_WON;
         }
         /// <summary>
         /// Shows the ending game dialog - we get the gameStatus to see if the player tied, won or lost
@@ -367,7 +360,6 @@ namespace Lambda2
             d.SetContentView(Resource.Layout.gameEnd_Dialog);
             d.SetCancelable(false);
             d.SetTitle("סיכום משחק");
-
             btnDialogGoHome = d.FindViewById<Button>(Resource.Id.btnDialogGoHome);
             btnDialogGoHome.SetOnClickListener(this);
             tvEndResult = d.FindViewById<TextView>(Resource.Id.tvEndResult);
@@ -376,23 +368,22 @@ namespace Lambda2
             //init points in dialog - to show the game outcome
             tvDialogMyPoints.Text =  tvDialogMyPoints.Text + user.Points.ToString();
             tvDialogOpponentPoints.Text = tvDialogOpponentPoints.Text + opponent.Points.ToString();
-
             //show the result of the game, if the player tied / won / lost
             string tie = "תוצאת המשחק היא תיקו!\nבהצלחה בפעם הבאה...";
             string won = "ניצחת את המשחק!\nכל הכבוד!";
             string lost = "הפסדת את המשחק!\nבהצלחה בפעם הבאה...";
             switch (gameStatus)
             {
-                case 0:
+                case Constants.TIE:
                     tvEndResult.Text = tie;
                     break;
-                case 1:
+                case Constants.HOST_WINS:
                     if (isHost)
                         tvEndResult.Text = won;
                     else
                         tvEndResult.Text = lost;
                     break;
-                case 2:
+                case Constants.PLAYER_WINS:
                     if (!isHost)
                         tvEndResult.Text = won;
                     else
@@ -420,16 +411,13 @@ namespace Lambda2
             GameHMap.Put(Constants.HOST_GAME, (string)ds.Get(Constants.HOST_GAME));
             GameHMap.Put(Constants.PLAYER_GAME, (string)ds.Get(Constants.PLAYER_GAME));
             GameHMap.Put(Constants.CURRENT_Q_INDEX, (int)ds.Get(Constants.CURRENT_Q_INDEX));
-
             GameHMap.Put(Constants.ISLIVE_GAME, (bool)ds.Get(Constants.ISLIVE_GAME));
             GameHMap.Put(Constants.IS_RESTING_TIME, (bool)ds.Get(Constants.IS_RESTING_TIME));
             GameHMap.Put(Constants.IS_NEW_QUESTION, (bool)ds.Get(Constants.IS_NEW_QUESTION));
-
             GameHMap.Put(Constants.HOST_ANSWER, (int)ds.Get(Constants.HOST_ANSWER));
             GameHMap.Put(Constants.PLAYER_ANSWER, (int)ds.Get(Constants.PLAYER_ANSWER));
             GameHMap.Put(Constants.HOST_POINTS, (int)ds.Get(Constants.HOST_POINTS));
             GameHMap.Put(Constants.PLAYER_POINTS, (int)ds.Get(Constants.PLAYER_POINTS));
-            
             return GameHMap;
         }
         /// <summary>
@@ -456,7 +444,6 @@ namespace Lambda2
             opponent.UserName = Intent.GetStringExtra(Constants.OPPONENT_NAME);//we get the opponent's name from HomeActivity's intent call
             isHost = Intent.GetBooleanExtra(Constants.ISHOST_GAME, false);
             lastIndex = -1; //so we don't mistakenly check and think this was an index
-                
         }
         /// <summary>
         /// Initializes music for the game (according to if it has been muted)
@@ -486,9 +473,7 @@ namespace Lambda2
             InitTextViews();
             ivMePic = FindViewById<ImageView>(Resource.Id.ivMePic);
             ivOpponentPic = FindViewById<ImageView>(Resource.Id.ivOpponentPic);
-
-            tvTitle.Text = game.Subject + " :נושא" ?? " ";
-
+            tvTitle.Text = "נושא: " + game.Subject ?? " ";
             tvMe.Text = user.UserName;
             tvOpponent.Text = opponent.UserName;
         }
@@ -501,29 +486,21 @@ namespace Lambda2
             if (int.Parse(tvMyAnswer.Text) < 10000)//Don't input values over 99999
                 NumbersToTextView(v);
             if (v == btnDelete)//Change answer to 0
-            {
                 tvMyAnswer.Text = 0.ToString();
-            }
             else if (v == btnSend)
-            {
                 taskAnsweredQue = fd.GetDocument(Constants.GAMES_COL, game.GameNum).AddOnCompleteListener(this);
-                
-            }else if(v == btnDialogGoHome)
+            else if(v == btnDialogGoHome)
             {
-                if (isHost)//reset the game in firestore
-                {
-                    HashMap reset = new HashMap();
-                    reset.Put(Constants.GAMENUM, game.GameNum);
-                    reset.Put(Constants.ISLIVE_GAME, false);
-                    _ = fd.AddDocumentToCollection(Constants.GAMES_COL, game.GameNum, reset);
-                }
+                HashMap reset = new HashMap();
+                reset.Put(Constants.GAMENUM, game.GameNum);
+                reset.Put(Constants.ISLIVE_GAME, false);
+                _ = fd.AddDocumentToCollection(Constants.GAMES_COL, game.GameNum, reset);
                 backgroud_music.Stop();
                 d.Dismiss();
                 Intent intent = new Intent(this, typeof(HomeActivity));
                 StartActivity(intent);
                 Finish();
             }
-            
         }
         /// <summary>
         /// Handles the answer typing process - according to the buttons (0-9)

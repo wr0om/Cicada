@@ -78,13 +78,13 @@ namespace Lambda2
             Email = (string)ds.Get(Constants.EMAIL);
             Password = (string)ds.Get(Constants.PASSWORD);
             if (ds.Get(Constants.PROFILE_PIC_URL) != null)
-            { ProfilePicture_url = (string)ds.Get(Constants.PROFILE_PIC_URL); }
+            ProfilePicture_url = (string)ds.Get(Constants.PROFILE_PIC_URL);
             if (ds.Get(Constants.TIE_NUM) != null)
-            { TieNum = (int)ds.Get(Constants.TIE_NUM); }
+            TieNum = (int)ds.Get(Constants.TIE_NUM);
             if (ds.Get(Constants.WIN_NUM) != null)
-            { WinNum = (int)ds.Get(Constants.WIN_NUM); }
+            WinNum = (int)ds.Get(Constants.WIN_NUM);
             if (ds.Get(Constants.LOSS_NUM) != null)
-            { LossNum = (int)ds.Get(Constants.LOSS_NUM); }
+            LossNum = (int)ds.Get(Constants.LOSS_NUM);
         }
 
     }

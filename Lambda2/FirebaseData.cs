@@ -61,7 +61,7 @@ namespace Lambda2
         /// <param name="email">email</param>
         /// <param name="password">password</param>
         /// <returns>task that is supposed to create user</returns>
-        public Android.Gms.Tasks.Task CreateUser(string email, string password)
+        public Task CreateUser(string email, string password)
         {
             return auth.CreateUserWithEmailAndPassword(email, password);
         }
@@ -71,7 +71,7 @@ namespace Lambda2
         /// <param name="email">email</param>
         /// <param name="password">email</param>
         /// <returns>task that is suppose to sign in</returns>
-        public Android.Gms.Tasks.Task SignIn(string email, string password)
+        public Task SignIn(string email, string password)
         {
             return auth.SignInWithEmailAndPassword(email, password);
         }

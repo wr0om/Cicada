@@ -85,9 +85,7 @@ namespace Lambda2
         public void OnClick(View v)
         {
             if (v == btnSignUp && etEmail.Text != "" && etPassword.Text != "")
-            {
                 taskSignUp = fd.CreateUser(etEmail.Text, etPassword.Text).AddOnCompleteListener(this);
-            }
             else if (v == btnSignIn_Page)//Go to LogIn page
             {
                 Intent intent = new Intent(this, typeof(SignInActivity));
@@ -110,9 +108,7 @@ namespace Lambda2
                     Toast.MakeText(this, "Created new user", ToastLength.Long).Show();
                 }
                 else if (task == taskSignIn)
-                {
                     Toast.MakeText(this, "User " + user.UserName + " signed in automatically", ToastLength.Long).Show();
-                }
                 sp.SetData(Constants.EMAIL, user.Email);
                 sp.SetData(Constants.PASSWORD, user.Password);
                 sp.SetData(Constants.USERNAME, user.UserName);

@@ -32,7 +32,6 @@ namespace Lambda2
         User user;
         FirebaseData fd;
         Task taskCaptureImage,taskUploadImage, taskEqualCollection, taskInitStats;
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -55,10 +54,12 @@ namespace Lambda2
         {
             fd = new FirebaseData();
             sp = new SPData(this);
-            user = new User();
-            user.Email = sp.GetStringData(Constants.EMAIL);
-            user.UserName = sp.GetStringData(Constants.USERNAME);
-            user.Password = sp.GetStringData(Constants.PASSWORD);
+            user = new User
+            {
+                Email = sp.GetStringData(Constants.EMAIL),
+                UserName = sp.GetStringData(Constants.USERNAME),
+                Password = sp.GetStringData(Constants.PASSWORD)
+            };
         }
         /// <summary>
         /// Initializes views of this activity
@@ -94,18 +95,13 @@ namespace Lambda2
                 StartActivity(intent);
                 Finish();
             }
-            if (v == btnCaptureImage)
-            {
+            else if (v == btnCaptureImage)
                 OpenCamera();
-            }
-            if(v == btnUploadImage)//implement at this end
-            {
+            else if(v == btnUploadImage)
                 OpenGallery();
-            }
-            if(v == btnLogOut)
+            else if(v == btnLogOut)
             {
                 sp.DeleteSPData();
-                Finish();
                 Intent intent = new Intent(this, typeof(SignUpActivity));
                 StartActivity(intent);
                 Finish();
@@ -120,17 +116,14 @@ namespace Lambda2
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-            if (requestCode == Constants.REQUEST_OPEN_CAMERA)
+            if (resultCode == Result.Ok && data != null)
             {
-                if (resultCode == Result.Ok && data != null)
+                if (requestCode == Constants.REQUEST_OPEN_CAMERA)
                 {
                     Bitmap bitmap = (Android.Graphics.Bitmap)data.Extras.Get(Constants.KEY_CAMERA_IMAGE);
                     taskCaptureImage = fd.SaveImage(bitmap, user.UserName + ".png").AddOnCompleteListener(this);
                 }
-            }
-            if (requestCode == Constants.REQUEST_OPEN_GALLERY)
-            {
-                if (resultCode == Result.Ok && data != null)
+                if (requestCode == Constants.REQUEST_OPEN_GALLERY)
                 {
                     Stream stream = ContentResolver.OpenInputStream(data.Data);
                     Bitmap bitmap = BitmapFactory.DecodeStream(stream);
@@ -162,28 +155,26 @@ namespace Lambda2
         /// <param name="task">The task firestore returns</param>
         public void OnComplete(Task task)
         {
-            if(task == taskCaptureImage || task == taskUploadImage)
+            if(task == taskCaptureImage || task == taskUploadImage && task.IsSuccessful)
             {
-                if (task.IsSuccessful)
-                {
-                    UploadTask.TaskSnapshot taskSnapshot = (UploadTask.TaskSnapshot)task.Result;
-                    user.ProfilePicture_url = taskSnapshot.DownloadUrl.ToString();
-                    sp.SetData(Constants.PROFILE_PIC_URL, user.ProfilePicture_url);
-                    fd.UpdateDocument(Constants.FS_USERS_COL, user.UserName, Constants.PROFILE_PIC_URL, user.ProfilePicture_url);
-                    ImageService.Instance.LoadUrl(user.ProfilePicture_url).Retry(3, 200).FadeAnimation(true).DownSample(Constants.DOWNSAMPLE_SIZE * 2, Constants.DOWNSAMPLE_SIZE * 2).Into(ivProfilePic);
-                }
+                UploadTask.TaskSnapshot taskSnapshot = (UploadTask.TaskSnapshot)task.Result;
+                user.ProfilePicture_url = taskSnapshot.DownloadUrl.ToString();
+                sp.SetData(Constants.PROFILE_PIC_URL, user.ProfilePicture_url);
+                fd.UpdateDocument(Constants.FS_USERS_COL, user.UserName, Constants.PROFILE_PIC_URL, user.ProfilePicture_url);
+                ImageService.Instance.LoadUrl(user.ProfilePicture_url).Retry(3, 200).FadeAnimation(true).DownSample(Constants.DOWNSAMPLE_SIZE * 2, Constants.DOWNSAMPLE_SIZE * 2).Into(ivProfilePic);
             }
-            if(task == taskEqualCollection)
+            else if(task == taskEqualCollection && task.IsSuccessful)
             {
                 DocumentSnapshot ds = (DocumentSnapshot)task.Result;
-                if (task.IsSuccessful && ds.Get(Constants.PROFILE_PIC_URL) != null)
+                if (ds.Get(Constants.PROFILE_PIC_URL) != null)
                 {
                     //if the user set a profile picture manually already, we add its url to the user's information in sp and input the picture to the imageview
                     user.ProfilePicture_url = (string)ds.Get(Constants.PROFILE_PIC_URL);
                     sp.SetData(Constants.PROFILE_PIC_URL, user.ProfilePicture_url);
                     ImageService.Instance.LoadUrl(user.ProfilePicture_url).Retry(3, 200).FadeAnimation(true).DownSample(Constants.DOWNSAMPLE_SIZE * 2, Constants.DOWNSAMPLE_SIZE * 2).Into(ivProfilePic);
                 }
-            }if(task.IsSuccessful && task == taskInitStats)
+            }
+            else if(task == taskInitStats && task.IsSuccessful)
             {
                 DocumentSnapshot ds = (DocumentSnapshot)task.Result;
                 user.TieNum = ds.Get(Constants.TIE_NUM) != null ? (int)ds.Get(Constants.TIE_NUM) : 0;

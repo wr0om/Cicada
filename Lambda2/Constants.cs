@@ -14,6 +14,7 @@ namespace Lambda2
     /// <summary>
     /// constants for the whole project
     /// </summary>
+    
     static class Constants
     {
         public const int DEFAULT_COST_VALUE = 0;
@@ -30,23 +31,19 @@ namespace Lambda2
         public const string QUESTIONS_COL = "questions";
         public const string QUESTIONS_ARR = "questions";
         public const string ANSWERS_COL = "answers";
-
         public const string ANSWERS_ARR = "answers";
         //for the player's data
         public const string TIE_NUM = "TieNum";
         public const string WIN_NUM = "WinNum";
         public const string LOSS_NUM = "LossNum";
-
         public const int NUMBER_OF_QUESTIONS = 100;//number of questions I put in the sql database.
-
         public const string HOST_ANSWER = "host_Answer";
         public const string PLAYER_ANSWER = "player_Answer";
-        public const string HOST_POINTS= "host_Points";
+        public const string HOST_POINTS = "host_Points";
         public const string PLAYER_POINTS = "player_Points";
         public const int POINTS_TO_WIN = 5;
         public const string IS_RESTING_TIME = "isRestingTime";
         public const string IS_NEW_QUESTION = "isNewQuestion";
-
         public const string ISLIVE_GAME = "isLive";
         public const string ISHOST_GAME = "isHost";
         public const string GAMENUM = "gameNum";
@@ -62,6 +59,11 @@ namespace Lambda2
         public const int DOWNSAMPLE_SIZE = 70;
         public const int REQUEST_OPEN_CAMERA = 1;
         public const int REQUEST_OPEN_GALLERY = 2;
+
+        public const int TIE = 0;
+        public const int HOST_WINS = 1;
+        public const int PLAYER_WINS = 2;
+        public const int NOT_WON = -1;
 
     }
 }
