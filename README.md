@@ -6,3 +6,17 @@ Trivia game, inspired by the legendary organization "Cicada 3301".
 
 Project consists of a Firebase database, used to communicate with android devices.
 
+
+2 players join the same session using a matchmaking process done by firestore.
+They have 10 seconds to answer any question, by pressing the submit button "שלח".
+Whoever is closest to the answer shown in the middle, gets the point - first to 5 wins.
+Then, they have 5 seconds of "resting time" before the next question.
+
+![image](https://user-images.githubusercontent.com/59180254/117958207-77cbbc00-b323-11eb-96fd-0e0e96f760b6.png)
+
+After each game the data is saved on firestore, and can be accessed on the "Me" page.
+
+![image](https://user-images.githubusercontent.com/59180254/117959273-84044900-b324-11eb-9d8a-d374d0c82f55.png)
+
+
+
