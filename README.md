@@ -11,7 +11,6 @@ Project consists of a Firebase database, used to communicate with android device
 They have 10 seconds to answer any question, by pressing the submit button "שלח".
 
 Whoever is closest to the answer shown in the middle, gets the point - first to 5 wins (there could be a tie).
-Then, they have 5 seconds of "resting time" before the next question.
 
 ![image](https://user-images.githubusercontent.com/59180254/117958207-77cbbc00-b323-11eb-96fd-0e0e96f760b6.png)
 
