@@ -1,5 +1,12 @@
-# Cicada
+<p align="center">
+     Cicada
+</p>
+<p align="center">
+ <a href="https://en.wikipedia.org/wiki/Cicada_3301">
+<img align="center" alt="wr0om | AMAN-CHALLENGE" width="120px" src="https://camo.githubusercontent.com/df3bca8cf51effeee3ceffd0b032e1bb686ae1215f7c84a1e83f92fd3f0bedb7/68747470733a2f2f692e6962622e636f2f4d70787879746a2f69632d6c61756e636865722d726f756e642e706e67"/>
+</p>
 
+<br/>
 Final Computer Science thesis for 5 points (Bagrut).
 
 Trivia game, inspired by the legendary organization "Cicada 3301".
